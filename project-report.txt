@@ -1,0 +1,168 @@
+Project Report – ASCII-IMAGE: Luminance-to-Character Mapper
+1. Introduction
+
+Digital images contain thousands to millions of pixels with rich RGB color information. While this creates visually detailed images, it also makes them impossible to display meaningfully in low-density mediums such as coding terminals or plain-text editors.
+The ASCII-IMAGE project addresses this challenge by converting modern digital images into expressive ASCII art, using only a small set of text characters. This technique takes advantage of the varying “visual weights” of common characters to mimic brightness levels in the original image.
+
+The project thus transforms a full-color photograph into a “Retro Terminal Art” representation—bringing together creativity, data compression, and visual computing.
+
+2. Objectives
+
+Convert a high-density digital image into low-resolution ASCII art.
+
+Use luminance (brightness values) to map pixels to characters.
+
+Reduce complexity by converting RGB images to grayscale.
+
+Produce output that fits within a standard terminal window (≤ 80 characters).
+
+Store ASCII art both on-screen and in a text file.
+
+3. System Overview
+
+The conversion pipeline consists of four major stages:
+
+Pre-processing
+
+Channel Reduction
+
+Luminance-to-Character Mapping
+
+ASCII Art Reconstruction & Output
+
+Each stage is modular and handled by specialized functions in the program.
+
+4. Methodology
+4.1 Pre-Processing (Image Downsampling)
+
+High-resolution images cannot be displayed as plain text due to width limitations in standard terminals.
+The resize_image function:
+
+Reads the original image dimensions.
+
+Resizes the width to a maximum of 80 characters.
+
+Maintains aspect ratio by adjusting height proportionally.
+
+Ensures terminal-friendly output.
+
+This step drastically reduces pixel count while preserving form.
+
+4.2 Simplification (Grayscale Conversion)
+
+Color is not required for ASCII mapping.
+The grayify function:
+
+Converts the image from RGB mode to L mode (Luminance).
+
+Produces pixel values from 0 (black) to 255 (white).
+
+Reduces the data to a single brightness channel.
+
+This simplifies downstream processing and enhances mapping clarity.
+
+4.3 Mapping Engine (Pixels to ASCII Characters)
+
+This is the “brain” of the entire system.
+
+A carefully structured gradient of 11 ASCII characters is used:
+
+["@","#","S","%","?","*","+",";",":",",","."]
+
+
+Design choices:
+
+Dense characters like @, #, S represent dark areas.
+
+Light characters like ., ,, : represent bright areas.
+
+The pixels_to_ascii function:
+
+Reads each grayscale pixel value.
+
+Divides the pixel range (0–255) into bins mapped to the 11 characters.
+
+Outputs a continuous string of ASCII symbols.
+
+This stage translates image luminance into textual density.
+
+4.4 Data Reconstruction
+
+The ASCII output from the mapping stage is one continuous string.
+To restore 2D structure:
+
+The string is sliced every 80 characters (image width).
+
+Each slice becomes a row in the final ASCII art.
+
+The result is printed to the terminal and also saved as a .txt file.
+
+The program includes error handling (try-except) for invalid file paths.
+
+5. Features
+Feature	Description
+Robustness	Includes try-except to prevent crashes when image input is invalid.
+Dual Output	Prints ASCII art to console and writes it to a text file.
+Density Control	Ordered ASCII character gradient preserves image contrast.
+Scalability	Easy to add more characters or customize mapping.
+User-Friendly	Automatically adjusts width to fit terminal constraints.
+6. Results
+
+Successfully converts any supported image format into ASCII representation.
+
+Output maintains recognizable structure and shading.
+
+Compatible with terminal editors, GitHub README files, and text-based interfaces.
+
+Produces readable and aesthetically pleasing retro-style artwork.
+
+7. Limitations
+
+Grayscale simplifies color richness; color ASCII not supported.
+
+Terminal fonts typically have non-square pixels → slight vertical distortion.
+
+Larger images lose detail when compressed to 80 characters width.
+
+8. Future Enhancements (Version 2.0 Scope)
+8.1 Aspect Ratio Correction
+
+Characters in most monospaced fonts are taller than wide.
+To prevent “stretching,” the height can be rescaled:
+
+Multiply target height by 0.5 before resizing.
+
+Produces more accurate proportions.
+
+8.2 Color ASCII Art
+
+Introduce ANSI terminal color codes to map RGB values.
+
+8.3 Adjustable Resolution
+
+Allow users to specify custom width values for higher fidelity.
+
+8.4 GUI Interface
+
+Build a simple Tkinter/Qt GUI for drag-and-drop usage.
+
+8.5 Integration with Command-line Flags
+
+Example:
+
+asciiart --width 120 --invert --output myart.txt
+
+9. Conclusion
+
+The ASCII-IMAGE project demonstrates how image processing concepts like luminance mapping, channel reduction, and downsampling can be combined with creative text-based visualization.
+It efficiently converts modern images into lightweight ASCII art using a structured luminance-to-character mapping approach.
+
+The system highlights:
+
+Practical use of grayscale image manipulation
+
+Data compression into human-readable text
+
+Nostalgic yet functional visualization technique
+
+With planned improvements such as aspect ratio correction and color support, the project has clear potential for enhanced visual fidelity and expanded utility.
